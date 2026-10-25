@@ -3,38 +3,31 @@ package SC2002_Project.sc2002project;
 public class Order {
 
 	private int orderID;
-	private int tableID; 
+	private int tableID;
+    private Table table;
 	private MenuItem item;
 	private OrderStatus status = OrderStatus.PLACED;
 	private int preparedUnits = 0;
 	
-	public Order(int orderID, int tableID, int choice) {
-	    this.orderID = orderID;
-		this.tableID = tableID;
-		
-        /*
-        if choice == 1: Salad 
-        else if choice == 2: Burger
-        else if choice == 3: Pasta
-        */
+    public Order(int orderID, Table table, MenuItem item) {
+        if (table == null || item == null) {
+            throw new IllegalArgumentException(
+                "Table and menu item cannot be null."
+            );
+        }
 
-        if (choice == 1) {
-            item = menu[0]
-        }
-        else if (choice == 2) {
-            item = menu[1]
-        }
-        else if (choice == 3) {
-            item = menu[2]
-        }
-	}
-	
+        this.orderID = orderID;
+        this.table = table;
+        this.tableID = table.getTableID();
+        this.item = item;
+    }
+
 	public int getOrderID() {
 		return orderID;
 	}
 	
 	public Customer getCustomer() {
-		return tableList[tableID].getOccupant();
+		return table.getOccupant();
 	}
 	
 	public MenuItem getItem() {
@@ -50,9 +43,13 @@ public class Order {
 	}
 
     public boolean prepareOneUnit() {
+        // Only unfinished orders can be prepared
+        if (status != OrderStatus.PLACED &&
+            status != OrderStatus.PREPARING) {
+            return false;
+        }
 
-        //case where the order is already prepared
-        if (status == OrderStatus.READY) {
+        if (preparedUnits >= item.getPreparationUnits()) {
             return false;
         }
 
@@ -77,6 +74,17 @@ public class Order {
 
         //else, the food has either already been served or is not ready to serve
         return false;
+    }
+    
+    // Called by Cashier after payment
+    public boolean markPaid() {
+
+        if (status != OrderStatus.SERVED) {
+            return false;
+        }
+
+        status = OrderStatus.PAID;
+        return true;
     }
 
     public boolean cancel() {
