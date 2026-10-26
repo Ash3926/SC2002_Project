@@ -39,6 +39,8 @@ public class Table {
 	
 	public void release() {
 		occupied = false;
+		occupant = null;
+		order = null;
 	}
 	
 	public void display() {

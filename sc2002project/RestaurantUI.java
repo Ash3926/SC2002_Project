@@ -111,7 +111,7 @@ public class RestaurantUI {
 					for (int i=0; i<10; i++) {
 						if (orderList[i] != null) {
 							if (orderList[i].getOrderID() == orderID) {
-								action = orderList[i].serve();
+								action = w.serveOrder(orderList[i]);
 							}
 						}
 					}
@@ -140,7 +140,7 @@ public class RestaurantUI {
 					for (int i=0; i<10; i++) {
 						if (orderList[i] != null) {
 							if (orderList[i].getOrderID() == orderID) {
-								action = orderList[i].prepareOneUnit();
+								action = c.prepareOrder(orderList[i]);
 							}
 						}
 					}
@@ -170,7 +170,13 @@ public class RestaurantUI {
 	}
 
 	public void cashierAction() {
-		//TODO: implement Cashier class and implement this accordingly
+		Cashier cashier = (Cashier) staffList[0];
+
+		boolean paid = cashier.processPayment(tableList, currStats);
+
+		if (paid) {
+			System.out.println("Payment processed successfully");
+		}
 	}
 
 }
