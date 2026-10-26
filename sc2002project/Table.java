@@ -40,5 +40,14 @@ public class Table {
 	public void release() {
 		occupied = false;
 	}
+	
+	public void display() {
+		System.out.println("Table ID: " + tableID);
+		if (occupied) {
+			System.out.println("Customer ID: " + occupant.getCustomerID());
+		} else {
+			System.out.println("No current occupant at this table.");
+		}
+	}
 
 }

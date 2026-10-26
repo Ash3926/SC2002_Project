@@ -40,5 +40,11 @@ public class Customer {
 	public void changeStatus(CustomerStatus custStatus) {
 		status = custStatus;
 	}
+	
+	public void display() {
+		System.out.println("Customer ID: " + customerID);
+		System.out.println("Status: " + status);
+		System.out.println("Satisfaction: " + satisfaction);
+	}
 
 }
