@@ -89,10 +89,7 @@ public class Order {
 
     public boolean cancel() {
         //case where order has already been completed (SERVED or PAID), so it can't be cancelled
-        if (status == OrderStatus.SERVED) {
-            return false;
-        }
-        if (status == OrderStatus.PAID) {
+        if (status == OrderStatus.SERVED || status == OrderStatus.PAID) {
             return false;
         }
 
