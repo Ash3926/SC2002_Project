@@ -122,6 +122,7 @@ public class RestaurantGame {
 						System.out.println("Table ID to seat this customer at: ");
 						Integer tableID = Integer.parseInt(sc.nextLine());
 						w.seatCustomer(custList[custID], tableList[tableID]);
+						System.out.println("Customer seated!");
 					}
 					break;
 
@@ -142,12 +143,14 @@ public class RestaurantGame {
 					Integer orderID = Integer.parseInt(sc.nextLine());
 					if (orderList[orderID] != null) {
 						w.serveOrder(orderList[orderID]);
+						System.out.println("Order served!");
 					}
 					break;
 
 				// Wait
 				case 4:
 					w.waiting();
+					System.out.println("Waiter waited this turn.");
 					break;
 			}
 		}
@@ -171,12 +174,14 @@ public class RestaurantGame {
 					Integer orderID = Integer.parseInt(sc.nextLine());
 					if (orderList[orderID] != null) {
 						c.prepareOrder(orderList[orderID]);
+						System.out.println("Order prepared!");
 					}
 					break;
 
 				// Wait
 				case 2: 
 					c.waiting();
+					System.out.println("Chef waited a turn.");
 					break;
 			}
 		}
