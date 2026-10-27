@@ -22,8 +22,8 @@ public class RestaurantUI {
 			Integer c = Integer.parseInt(sc.nextLine());
 			game.chefChoice(sc, c);
 			
-			game.cashierAction();
 			game.customerEat();
+			game.cashierAction();
 			game.updateSatisfaction();
 			game.nextTurn();
 		}
