@@ -2,11 +2,16 @@ package SC2002_Project.sc2002project;
 
 public class Waiter extends Staff {
 
-    private int nextOrderID = 1;
+    private int nextOrderID = 0;
 
     public Waiter() {
         super();
     }
+	
+	// Wait, do nothing
+	public void waiting() {
+		markTaskUsed();
+	}
 
     // Seat a customer at an available table
     public boolean seatCustomer(Customer cust, Table table) {
@@ -31,26 +36,27 @@ public class Waiter extends Staff {
     }
 
     // Take an order from a seated customer
-    public Order takeOrder(Customer cust, Table table, MenuItem[] menu) {
+    public Order takeOrder(Table table, MenuItem[] menu) {
+		Customer cust = table.getOccupant();
 
-        if (!canAct() || cust == null ||
-            table == null || menu == null) {
-            return null;
-        }
+        // if (!canAct() || cust == null ||
+            // table == null || menu == null) {
+            // return null;
+        // }
 
-        if (cust.getStatus() != CustomerStatus.SEATED ||
-            table.getOccupant() != cust ||
-            table.getOrder() != null) {
-            return null;
-        }
+        // if (cust.getStatus() != CustomerStatus.SEATED ||
+            // table.getOccupant() != cust ||
+            // table.getOrder() != null) {
+            // return null;
+        // }
 
         // Customer chooses their food
         int choice = cust.placeOrder();
 
-        if (choice < 0 || choice >= menu.length ||
-            menu[choice] == null) {
-            return null;
-        }
+        // if (choice < 0 || choice >= 3 ||
+            // menu[choice] == null) {
+            // return null;
+        // }
 
         Order order = new Order(nextOrderID, table, menu[choice]);
 

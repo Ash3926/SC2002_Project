@@ -28,6 +28,7 @@ public class Table {
 	}
 	
 	public boolean occupy(Customer customer) {
+		customer.setTableID(tableID);
 		occupant = customer;
 		occupied = true;
 		return true;
@@ -44,11 +45,11 @@ public class Table {
 	}
 	
 	public void display() {
-		System.out.println("Table ID: " + tableID);
+		System.out.print("Table ID: " + tableID);
 		if (occupied) {
-			System.out.println("Customer ID: " + occupant.getCustomerID());
+			System.out.println(" - Occupied");
 		} else {
-			System.out.println("No current occupant at this table.");
+			System.out.println(" - Not occupied");
 		}
 	}
 

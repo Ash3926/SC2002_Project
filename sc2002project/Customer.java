@@ -3,6 +3,7 @@ import java.util.Random;
 
 public class Customer {
 	private int customerID;
+	private int tableID;
 	private int satisfaction = 100;
 	private CustomerStatus status = CustomerStatus.WAITING;
 	
@@ -14,12 +15,20 @@ public class Customer {
 		return customerID;
 	}
 	
+	public int getTableID() {
+		return tableID;
+	}
+	
 	public int getSatisfaction() {
 		return satisfaction;
 	}
 	
 	public CustomerStatus getStatus() {
 		return status;
+	}
+	
+	public void setTableID(int tabID) {
+		tableID = tabID;
 	}
 	
 	public int placeOrder() {
@@ -42,9 +51,9 @@ public class Customer {
 	}
 	
 	public void display() {
-		System.out.println("Customer ID: " + customerID);
-		System.out.println("Status: " + status);
-		System.out.println("Satisfaction: " + satisfaction);
+		System.out.print("Customer " + customerID + " (");
+		System.out.print("Status: " + status);
+		System.out.println(", Satisfaction: " + satisfaction + ")");
 	}
 
 }

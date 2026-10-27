@@ -5,6 +5,11 @@ public class Chef extends Staff {
     public Chef() {
         super();
     }
+	
+	// Wait, do nothing
+	public void waiting() {
+		markTaskUsed();
+	}
 
     // Prepare one unit of an order
     public boolean prepareOrder(Order order) {

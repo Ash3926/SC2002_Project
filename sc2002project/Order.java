@@ -101,4 +101,11 @@ public class Order {
         status = OrderStatus.CANCELLED;
         return true;
     }
+	
+	public void display() {
+		System.out.print("Order " + orderID + " (");
+		System.out.print("Status: " + status);
+		System.out.print(", Item: " + item.getName());
+		System.out.println(", Units left: " + getRemainingUnits() + ")");
+	}
 }
