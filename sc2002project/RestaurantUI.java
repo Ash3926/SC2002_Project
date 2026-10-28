@@ -11,6 +11,8 @@ public class RestaurantUI {
 		// Game runs for 18 turns
 		while (game.getCurrTurn() <= 18) {
 			game.startTurnDisplay();
+			game.cashierAction();
+			game.customerEat();
 			
 			// Waiter
 			System.out.print("\nWaiter action: " );
@@ -22,11 +24,10 @@ public class RestaurantUI {
 			Integer c = Integer.parseInt(sc.nextLine());
 			game.chefChoice(sc, c);
 			
-			game.customerEat();
-			game.cashierAction();
 			game.updateSatisfaction();
 			game.nextTurn();
 		}
+		sc.close();
 	}
 	
 }

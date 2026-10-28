@@ -117,9 +117,9 @@ public class RestaurantGame {
 						
 					// 
 					} else {
-						System.out.println("Customer ID to seat: ");
+						System.out.print("Customer ID to seat: ");
 						Integer custID = Integer.parseInt(sc.nextLine());
-						System.out.println("Table ID to seat this customer at: ");
+						System.out.print("Table ID to seat this customer at: ");
 						Integer tableID = Integer.parseInt(sc.nextLine());
 						w.seatCustomer(custList[custID], tableList[tableID]);
 						System.out.println("Customer seated!");
@@ -128,7 +128,7 @@ public class RestaurantGame {
 
 				// Take order
 				case 2:
-					System.out.println("Table ID to take order from: ");
+					System.out.print("Table ID to take order from: ");
 					Integer tableID1 = Integer.parseInt(sc.nextLine());
 					Order order = w.takeOrder(tableList[tableID1], menu);
 					orderList[order.getOrderID()] = order;
@@ -139,7 +139,7 @@ public class RestaurantGame {
 
 				// Serve order
 				case 3:
-					System.out.println("Order ID to serve: ");
+					System.out.print("Order ID to serve: ");
 					Integer orderID = Integer.parseInt(sc.nextLine());
 					if (orderList[orderID] != null) {
 						w.serveOrder(orderList[orderID]);
@@ -170,7 +170,7 @@ public class RestaurantGame {
 				
 				// Cook
 				case 1: 
-					System.out.println("Order ID to advance by 1 preparation unit: ");
+					System.out.print("Order ID to advance by 1 preparation unit: ");
 					Integer orderID = Integer.parseInt(sc.nextLine());
 					if (orderList[orderID] != null) {
 						c.prepareOrder(orderList[orderID]);
@@ -187,10 +187,27 @@ public class RestaurantGame {
 		}
 	}
 
-	//not implementing customerStatusUpdates? not entirely sure what that does ngl
-	//public void customerSatisfactioUpdates() {}
-
-	// Apply waiting penalty and make customer leave is satisfaction is subzero
+	// Cashier action this turn
+	public void cashierAction() {
+		Cashier cash = (Cashier) staffList[0];
+		cash.resetForTurn();
+		while (cash.canAct()) {
+			cash.handlePayment(tableList, custList, currStats);
+		}
+	}
+	
+	// Customer spend 1 turn eating, become ready to pay
+	public void customerEat() {
+		
+		// Identify all eating customers
+		for (int i=0; i<10; i++) {
+			if (custList[i] != null && custList[i].getStatus() == CustomerStatus.EATING) {
+				custList[i].changeStatus(CustomerStatus.READY_TO_PAY);
+			}
+		}
+	}
+	
+	// Apply waiting penalty, make customer leave is satisfaction is subzero
 	public void updateSatisfaction() {
 		
 		// Iterate through every customer
@@ -215,26 +232,6 @@ public class RestaurantGame {
 					}
 					
 				}
-			}
-		}
-	}
-
-	public void cashierAction() {
-		Cashier cashier = (Cashier) staffList[0];
-
-		boolean paid = cashier.processPayment(tableList, currStats);
-
-		if (paid) {
-			System.out.println("Payment processed successfully");
-		}
-	}
-	
-	public void customerEat() {
-		
-		// Identify all eating customers
-		for (int i=0; i<10; i++) {
-			if (custList[i] != null && custList[i].getStatus() == CustomerStatus.EATING) {
-				custList[i].changeStatus(CustomerStatus.READY_TO_PAY);
 			}
 		}
 	}
