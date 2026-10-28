@@ -1,6 +1,7 @@
 package SC2002_Project.sc2002project.Staff;
 import SC2002_Project.sc2002project.Customer.*;
 import SC2002_Project.sc2002project.Objects.*;
+import SC2002_Project.sc2002project.*;
 
 public class Cashier extends Staff {
 
@@ -8,7 +9,7 @@ public class Cashier extends Staff {
         super();
     }
 	
-	public void handlePayment(Table[] tableList, Customer[] custList, GameStats stats) {
+	public boolean handlePayment(Table[] tableList, Customer[] custList, GameStats stats) {
 		
 		// Find oldest ready to pay customer by index in custList
 		for (int i=0; i<10; i++) {
@@ -18,6 +19,7 @@ public class Cashier extends Staff {
 				Order order = selectedTable.getOrder();
 				int bill = order.getItem().getPrice();
 				System.out.println("\nReceived $" + bill + " from Customer " + cust.getCustomerID() + "!");
+				System.out.println("Table " + selectedTable.getTableID() + " is now freed up!");
 				
 				//Update stats
 				cust.changeStatus(CustomerStatus.PAID);
@@ -26,10 +28,12 @@ public class Cashier extends Staff {
 				stats.updateTSatisfaction(cust.getSatisfaction());
 				order.markPaid();
 				selectedTable.release();
-				
-				break; // can only accept one payment per turn
+				markTaskUsed();
+				return true; // can only accept one payment per turn
 			}
 		}
+		// no payment made
 		markTaskUsed();
+		return false;
 	}
 }

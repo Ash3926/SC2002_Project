@@ -1,4 +1,5 @@
 package SC2002_Project.sc2002project.Customer;
+import SC2002_Project.sc2002project.Objects.*;
 import java.util.Random;
 
 public class Customer {
@@ -31,9 +32,9 @@ public class Customer {
 		tableID = tabID;
 	}
 	
-	public int placeOrder() {
+	public int placeOrder(MenuItem[] menu) {
 		Random r = new Random();
-		int choice = r.nextInt(3);
+		int choice = r.nextInt(menu.length);
 		return choice;
 	}
 	

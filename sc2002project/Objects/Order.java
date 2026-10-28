@@ -1,4 +1,5 @@
 package SC2002_Project.sc2002project.Objects;
+import SC2002_Project.sc2002project.Customer.*;
 
 public class Order {
 
@@ -45,39 +46,18 @@ public class Order {
 	public int getRemainingUnits() {
 		return item.getPreparationUnits() - preparedUnits;
 	}
-
-    public boolean prepareOneUnit() {
-        // Only unfinished orders can be prepared
-        if (status != OrderStatus.PLACED &&
-            status != OrderStatus.PREPARING) {
-            return false;
-        }
-
-        if (preparedUnits >= item.getPreparationUnits()) {
-            return false;
-        }
-
-        //else, increment preparedUnits by 1 and check if the order is complete
-        //update status accordingly
-        preparedUnits += 1;
-        if (preparedUnits == item.getPreparationUnits()) {
-            status = OrderStatus.READY;
-        }
-        else {
-            status = OrderStatus.PREPARING;
-        }
-        return true;
-    }
 	
-    public boolean serve() {
-        //case where order is ready to serve
-        if (status == OrderStatus.READY) {
-            status = OrderStatus.SERVED;
-            return true;
-        }
-
-        //else, the food has either already been served or is not ready to serve
-        return false;
+	public void prepareOneUnit() {
+		preparedUnits += 1;
+		if (preparedUnits == item.getPreparationUnits()) {
+			status = OrderStatus.READY;
+		} else {
+			status = OrderStatus.PREPARING;
+		}
+	}
+	
+    public void serve() {
+        status = OrderStatus.SERVED;
     }
     
     // Called by Cashier after payment

@@ -19,17 +19,17 @@ public class RestaurantUI {
 			
 			// Waiter
 			System.out.print("\nWaiter action: " );
-			String w = sc.nextLine();
-			game.waiterChoice(sc, w);
+			game.waiterChoice(sc, sc.nextLine());
 			
 			// Chef
 			System.out.print("\nChef action: ");
-			String c = sc.nextLine();
-			game.chefChoice(sc, c);
+			game.chefChoice(sc, sc.nextLine());
 			
 			game.updateSatisfaction();
+			game.endTurnDisplay();
 			game.nextTurn();
 		}
+		game.endGameDisplay();
 		sc.close();
 	}
 	

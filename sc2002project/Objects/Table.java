@@ -28,11 +28,10 @@ public class Table {
 		return occupied;
 	}
 	
-	public boolean occupy(Customer customer) {
+	public void occupy(Customer customer) {
 		customer.setTableID(tableID);
 		occupant = customer;
 		occupied = true;
-		return true;
 	}
 	
 	public void assignOrder(Order order) {
