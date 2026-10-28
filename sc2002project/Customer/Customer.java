@@ -5,10 +5,12 @@ public class Customer {
 	private int customerID;
 	private int tableID;
 	private int satisfaction = 100;
+	protected int billing;
 	private CustomerStatus status = CustomerStatus.WAITING;
 	
 	public Customer(int custID) {
 		customerID = custID;
+		billing = 100;
 	}
 	
 	public int getCustomerID() {
