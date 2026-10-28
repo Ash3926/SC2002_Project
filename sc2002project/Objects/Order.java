@@ -71,19 +71,8 @@ public class Order {
         return true;
     }
 
-    public boolean cancel() {
-        //case where order has already been completed (SERVED or PAID), so it can't be cancelled
-        if (status == OrderStatus.SERVED || status == OrderStatus.PAID) {
-            return false;
-        }
-
-        //case where order is already CANCELLED 
-        if (status == OrderStatus.CANCELLED) {
-            return true;
-        }
-
+    public void cancel() {
         status = OrderStatus.CANCELLED;
-        return true;
     }
 	
 	public void display() {
