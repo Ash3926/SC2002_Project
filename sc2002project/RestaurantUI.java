@@ -16,12 +16,12 @@ public class RestaurantUI {
 			
 			// Waiter
 			System.out.print("\nWaiter action: " );
-			Integer w = Integer.parseInt(sc.nextLine());
+			String w = sc.nextLine();
 			game.waiterChoice(sc, w);
 			
 			// Chef
 			System.out.print("\nChef action: ");
-			Integer c = Integer.parseInt(sc.nextLine());
+			String c = sc.nextLine();
 			game.chefChoice(sc, c);
 			
 			game.updateSatisfaction();

@@ -94,17 +94,36 @@ public class RestaurantGame {
 			custIndex += 1;
 		}
 	}
+	
+	// Method to validate if input is the correct format (can be converted to integer) and within given range
+	public static boolean isIntegerRange(String input, int start, int end) {
+		try {
+			Integer i = Integer.parseInt(input);
+			if (i>=start && i<=end) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		catch (NumberFormatException e) {
+			return false;
+		}
+	}
 
 	// Waiter choice this turn
-	public void waiterChoice(Scanner sc, int choice) {
+	public void waiterChoice(Scanner sc, String input) {
 		Waiter w = (Waiter) staffList[1];
 		w.resetForTurn();
+		
+		// Validate input, then convert to integer
+		while (!isIntegerRange(input, 1, 4)) {
+			System.out.print("Please enter a valid integer in the range 1-4: ");
+			input = sc.nextLine();
+		}
+		int choice = Integer.parseInt(input);
 
+		// Only use up action if acted
 		while(w.canAct()) {
-			if (choice<1 || choice>4) {
-				System.out.println("Invalid input");
-				break;
-			}
 
 			switch(choice) {
 				
