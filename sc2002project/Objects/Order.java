@@ -1,4 +1,4 @@
-package SC2002_Project.sc2002project;
+package SC2002_Project.sc2002project.Objects;
 
 public class Order {
 
@@ -25,6 +25,10 @@ public class Order {
 	public int getOrderID() {
 		return orderID;
 	}
+
+    public int getTableID() {
+        return tableID;
+    }
 	
 	public Customer getCustomer() {
 		return table.getOccupant();

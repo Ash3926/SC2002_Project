@@ -1,4 +1,7 @@
 package SC2002_Project.sc2002project;
+import SC2002_Project.sc2002project.Customer.*;
+import SC2002_Project.sc2002project.Staff.*;
+import SC2002_Project.sc2002project.Objects.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 

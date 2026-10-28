@@ -1,4 +1,6 @@
-package SC2002_Project.sc2002project;
+package SC2002_Project.sc2002project.Staff;
+import SC2002_Project.sc2002project.Customer.*;
+import SC2002_Project.sc2002project.Objects.*;
 
 public abstract class Staff {
 

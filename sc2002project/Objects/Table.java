@@ -1,4 +1,5 @@
-package SC2002_Project.sc2002project;
+package SC2002_Project.sc2002project.Objects;
+import SC2002_Project.sc2002project.Customer.*;
 
 public class Table {
 	private int tableID;

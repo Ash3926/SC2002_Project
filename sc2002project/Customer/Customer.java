@@ -1,4 +1,4 @@
-package SC2002_Project.sc2002project;
+package SC2002_Project.sc2002project.Customer;
 import java.util.Random;
 
 public class Customer {

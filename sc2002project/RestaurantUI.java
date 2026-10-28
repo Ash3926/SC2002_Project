@@ -1,9 +1,12 @@
 package SC2002_Project.sc2002project;
 import java.util.Scanner;
+import SC2002_Project.sc2002project.Customer.*;
+import SC2002_Project.sc2002project.Objects.*;
+import SC2002_Project.sc2002project.Staff.*;
 
 public class RestaurantUI {
 	
-	public void main(String[] args) {
+	public static void main(String[] args) {
 		System.out.println("Starting Restaurant Rush game...\nWelcome, Manager!");
 		Scanner sc = new Scanner(System.in);
 		RestaurantGame game = new RestaurantGame();
