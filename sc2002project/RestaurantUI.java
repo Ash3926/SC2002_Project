@@ -38,7 +38,7 @@ public class RestaurantUI {
 			game.nextTurn();
 		}
 
-		game.endTurnDisplay();
+		game.endGameDisplay();
 		sc.close();
 	}
 }
