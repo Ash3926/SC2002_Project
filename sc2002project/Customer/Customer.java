@@ -1,11 +1,12 @@
 package SC2002_Project.sc2002project.Customer;
-import java.util.Random;
+import SC2002_Project.sc2002project.Objects.*;
 
 public class Customer {
 	private int customerID;
 	private int tableID;
 	private int satisfaction = 100;
 	protected int billing;
+	private int servedTurn = -1;
 	private CustomerStatus status = CustomerStatus.WAITING;
 	
 	public Customer(int custID) {
@@ -32,11 +33,17 @@ public class Customer {
 	public void setTableID(int tabID) {
 		tableID = tabID;
 	}
+
+	public void setServedTurn(int turn) {
+    servedTurn = turn;
+	}
+
+	public int getServedTurn() {
+		return servedTurn;
+	}
 	
-	public int placeOrder() {
-		Random r = new Random();
-		int choice = r.nextInt(3);
-		return choice;
+	public int placeOrder(MenuItem[] menu) {
+		return customerID % menu.length;
 	}
 	
 	public int applyWaitingPenalty() {

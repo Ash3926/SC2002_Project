@@ -14,25 +14,20 @@ public class Chef extends Staff {
 
     // Prepare one unit of an order
     public boolean prepareOrder(Order order) {
-
-        if (!canAct() || order == null) {
+		// case 1: invalid order
+        if (order == null) {
+			System.out.println("There is no such order.");
             return false;
         }
-
         OrderStatus status = order.getOrderStatus();
-
-        // Only unfinished orders can be prepared
-        if (status != OrderStatus.PLACED &&
-            status != OrderStatus.PREPARING) {
+        // case 2: order not placed or preparing
+        if (status != OrderStatus.PLACED && status != OrderStatus.PREPARING) {
+			System.out.println("There order cannot be prepared.");
             return false;
         }
-
-        if (!order.prepareOneUnit()) {
-            return false;
-        }
-
+		// successful cooking
+		order.prepareOneUnit();
         markTaskUsed();
-
         return true;
     }
 }

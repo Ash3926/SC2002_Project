@@ -44,7 +44,13 @@ public class RestaurantGame {
 		System.out.println("\n==================================================");
 		System.out.println("Current turn: " + currStats.getCurrTurn());
 		System.out.println("Revenue: " + currStats.getTRevenue());
-		System.out.println("Average satisfaction of paid customers: " + currStats.calcAvgSatisfaction());
+		int avgSatisfaction = currStats.calcAvgSatisfaction();
+		if (currStats.getPaidCustomers() == 0) {
+			System.out.println("Average satisfaction of paid customers: N/A");
+		}
+		else {
+			System.out.println("Average satisfaction of paid customers: " + avgSatisfaction);
+		}
 		
 		// Customer arrival, if any
 		customerArrival();
@@ -80,7 +86,6 @@ public class RestaurantGame {
 		}
 
 		//staff tasks available 
-		//i'm actually not entirely sure what they mean by this lol isn't this always the same?
 		System.out.println("\nStaff tasks available:");
 		System.out.println("Waiter: \n1. Seat one queued customer at a free table \n2. Take one seated customer's order\n3. Serve one READY order\n4. Wait");
 		System.out.println("Chef: \n1. Choose one order to advance by 1 preparation unit\n2. Wait");
@@ -98,74 +103,83 @@ public class RestaurantGame {
 		}
 	}
 	
-	// Method to validate if input is the correct format (can be converted to integer) and within given range
-	public static boolean isIntegerRange(String input, int start, int end) {
-		try {
-			Integer i = Integer.parseInt(input);
-			if (i>=start && i<=end) {
-				return true;
-			} else {
-				return false;
+	// Method to return a valid int input and in range
+	public int validIntegerRange(Scanner sc, String input, int start, int end) {
+		while (true) {
+			try {
+				int i = Integer.parseInt(input);
+				if (i<start || i>end) {
+					System.out.print("Please enter an integer within the range " + start + "-" + end + ": ");
+					input = sc.nextLine();
+				} else {
+					return Integer.parseInt(input);
+				}
+			}
+			catch (NumberFormatException e) {
+				System.out.print("Please enter a valid integer: ");
+				input = sc.nextLine();
 			}
 		}
-		catch (NumberFormatException e) {
-			return false;
-		}
+		
 	}
 
 	// Waiter choice this turn
 	public void waiterChoice(Scanner sc, String input) {
 		Waiter w = (Waiter) staffList[1];
 		w.resetForTurn();
+		int choice = validIntegerRange(sc, input, 1, 4);
 		
-		// Validate input, then convert to integer
-		while (!isIntegerRange(input, 1, 4)) {
-			System.out.print("Please enter a valid integer in the range 1-4: ");
-			input = sc.nextLine();
-		}
-		int choice = Integer.parseInt(input);
-
-		// Only use up action if acted
 		while(w.canAct()) {
 
 			switch(choice) {
 				
 				// Seat customer
 				case 1:
-				
-					// No free tables
-					if (tableList[0].isOccupied() && tableList[1].isOccupied()) {
-						System.out.println("No free tables.");
-						
-					// 
-					} else {
-						System.out.print("Customer ID to seat: ");
-						Integer custID = Integer.parseInt(sc.nextLine());
-						System.out.print("Table ID to seat this customer at: ");
-						Integer tableID = Integer.parseInt(sc.nextLine());
-						w.seatCustomer(custList[custID], tableList[tableID]);
+					System.out.print("Customer ID to seat: ");
+					int custID = validIntegerRange(sc, sc.nextLine(), 0, 9);
+					System.out.print("Table ID to seat this customer at: ");
+					int tabID_1 = validIntegerRange(sc, sc.nextLine(), 0, 1);
+					// attempt to seat, if error let player choose action again
+					if (w.seatCustomer(custList[custID], tableList[tabID_1])) {
 						System.out.println("Customer seated!");
+					} else {
+						System.out.println("Please try again.");
+						System.out.print("\nWaiter action: " );
+						choice = validIntegerRange(sc, sc.nextLine(), 1, 4);
 					}
 					break;
-
+					
 				// Take order
 				case 2:
 					System.out.print("Table ID to take order from: ");
-					Integer tableID1 = Integer.parseInt(sc.nextLine());
-					Order order = w.takeOrder(tableList[tableID1], menu);
-					orderList[order.getOrderID()] = order;
-					System.out.println("Order placed!");
-					order.display();
+					int tabID_2 = validIntegerRange(sc, sc.nextLine(), 0, 1);
+					// attempt to take order
+					Order order = w.takeOrder(tableList[tabID_2], menu);
+					if (order != null) {
+						orderList[order.getOrderID()] = order;
+						System.out.println("Order placed!");
+						order.display();
+					} else {
+						System.out.println("Please try again.");
+						System.out.print("\nWaiter action: " );
+						choice = validIntegerRange(sc, sc.nextLine(), 1, 4);
+					}
 					break;
 
 
 				// Serve order
 				case 3:
 					System.out.print("Order ID to serve: ");
-					Integer orderID = Integer.parseInt(sc.nextLine());
-					if (orderList[orderID] != null) {
-						w.serveOrder(orderList[orderID]);
+					int ordID = validIntegerRange(sc, sc.nextLine(), 0, 9);
+					// attempt to serve
+					if (w.serveOrder(orderList[ordID])) {
 						System.out.println("Order served!");
+						currStats.incrementServedCustomers();
+						orderList[ordID].getCustomer().setServedTurn(currStats.getCurrTurn());
+					} else {
+						System.out.println("Please try again.");
+						System.out.print("\nWaiter action: " );
+						choice = validIntegerRange(sc, sc.nextLine(), 1, 4);
 					}
 					break;
 
@@ -178,32 +192,34 @@ public class RestaurantGame {
 		}
 	}
 
-	public void chefChoice(Scanner sc, int choice) {
+	// Chef choice this turn
+	public void chefChoice(Scanner sc, String input) {
 		Chef c = (Chef) staffList[2];
 		c.resetForTurn();
+		int choice = validIntegerRange(sc, input, 1, 2);
 
 		while(c.canAct()) {
-			if (choice<1 || choice>2) {
-				System.out.println("Invalid input");
-				break;
-			}
 
 			switch (choice) {
 				
 				// Cook
 				case 1: 
 					System.out.print("Order ID to advance by 1 preparation unit: ");
-					Integer orderID = Integer.parseInt(sc.nextLine());
-					if (orderList[orderID] != null) {
-						c.prepareOrder(orderList[orderID]);
+					int ordID = validIntegerRange(sc, sc.nextLine(), 0, 9);
+					// attempt to cook
+					if (c.prepareOrder(orderList[ordID])) {
 						System.out.println("Order prepared!");
+					} else {
+						System.out.println("Please try again.");
+						System.out.print("\nChef action: " );
+						choice = validIntegerRange(sc, sc.nextLine(), 1, 2);
 					}
 					break;
 
 				// Wait
 				case 2: 
 					c.waiting();
-					System.out.println("Chef waited a turn.");
+					System.out.println("Chef waited this turn.");
 					break;
 			}
 		}
@@ -213,18 +229,17 @@ public class RestaurantGame {
 	public void cashierAction() {
 		Cashier cash = (Cashier) staffList[0];
 		cash.resetForTurn();
-		while (cash.canAct()) {
-			cash.handlePayment(tableList, custList, currStats);
-		}
+		cash.handlePayment(tableList, custList, currStats);
 	}
 	
 	// Customer spend 1 turn eating, become ready to pay
 	public void customerEat() {
-		
-		// Identify all eating customers
-		for (int i=0; i<10; i++) {
-			if (custList[i] != null && custList[i].getStatus() == CustomerStatus.EATING) {
-				custList[i].changeStatus(CustomerStatus.READY_TO_PAY);
+		for (int i = 0; i < custList.length; i++) {
+			Customer cust = custList[i];
+			if (cust != null && cust.getStatus() == CustomerStatus.EATING) {
+				if (cust.getServedTurn() < currStats.getCurrTurn()) {
+					cust.changeStatus(CustomerStatus.READY_TO_PAY);
+				}
 			}
 		}
 	}
@@ -241,6 +256,8 @@ public class RestaurantGame {
 				if (cust.getStatus() == CustomerStatus.WAITING) {
 					if (cust.applyWaitingPenalty() == 0) {
 						cust.changeStatus(CustomerStatus.LEFT);
+						currStats.incrementUnhappyDepartures();
+						System.out.println("\nCustomer " + cust.getCustomerID() + " has left!");
 					}
 					
 				// Seated at table
@@ -249,13 +266,66 @@ public class RestaurantGame {
 						cust.changeStatus(CustomerStatus.LEFT);
 						Table t = tableList[cust.getTableID()];
 						Order o = t.getOrder();
+						if (o != null) {
+							o.cancel();
+						}
 						t.release();
-						o.cancel();
+						currStats.incrementUnhappyDepartures();
+						System.out.println("\nCustomer " + cust.getCustomerID() + " has left!");
 					}
-					
 				}
 			}
 		}
 	}
 
+	public void endTurnDisplay() {
+		System.out.println("\n================== Turn " + currStats.getCurrTurn() + " over ====================");
+		//served count
+		System.out.println("Number of customers served: " + currStats.getTServedCustomers());
+		//unhappy departures
+		System.out.println("Number of unhappy departures: " + currStats.getTUnhappyDepartures());
+		//revenue
+		System.out.println("Total Revenue: " + currStats.getTRevenue());
+		//average satisfaction of paid customers
+		int avgSatisfaction = currStats.calcAvgSatisfaction();
+		if (currStats.getPaidCustomers() == 0) {
+			System.out.println("Average satisfaction of paid customers: N/A");
+		}
+		else {
+			System.out.println("Average satisfaction of paid customers: " + avgSatisfaction);
+		}
+	}
+
+	
+	public void endGameDisplay() {
+
+		System.out.println("\n=================== GAME OVER ====================");
+
+		// Check victory conditions
+		if (currStats.getPaidCustomers() >= 4 &&
+			currStats.getTRevenue() >= 45 &&
+			currStats.calcAvgSatisfaction() >= 60) {
+
+			System.out.println("VICTORY!");
+
+		} else {
+			System.out.println("DEFEAT.");
+		}
+
+		// Display final statistics
+		System.out.println("\nSTATISTICS!");
+		System.out.println("Total revenue: " + currStats.getTRevenue());
+		System.out.println("Total customers served: " + currStats.getTServedCustomers());
+		System.out.println("Total unhappy departures: " + currStats.getTUnhappyDepartures());
+
+		if (currStats.getPaidCustomers() == 0) {
+			System.out.println("Average satisfaction of paid customers: N/A");
+		} else {
+			System.out.println("Average satisfaction of paid customers: " + currStats.calcAvgSatisfaction());
+		}
+
+		System.out.println("\nThank you for playing Papa's Western Fooderia!");
+	}
+
+		
 }
