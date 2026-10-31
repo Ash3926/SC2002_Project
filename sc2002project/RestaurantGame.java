@@ -93,11 +93,27 @@ public class RestaurantGame {
 	}
 	
 	// Customer arrival at turn 1, 4, 7, 10, 13, 16
+	// Turn 4 introduces the Critic
+	// Turn 10 introduces the VIP
 	public void customerArrival() {
 		int turn = currStats.getCurrTurn();
 		if (turn==1 || turn==4 || turn==7 || turn==10 || turn==13 || turn==16) {
-			System.out.println("\nCustomer " + custIndex + " has arrived!");
-			Customer c = new Customer(custIndex);
+			Customer c;
+			if (turn==4){
+				System.out.println("\nCritic Customer " + custIndex + " has arrived!");
+				System.out.println("Critic Customers do not leave until they have been served, and lose satisfaction faster!");
+				System.out.println("Managerial Board Hint: Get Karen outta here!");
+				c = new Critic(custIndex);
+			}
+			else if (turn==10){
+				System.out.println("\nVIP Customer " + custIndex + " has arrived!");
+				System.out.println("VIP Customers lose less satisfaction per turn, but pay 10% less!");
+				c = new VIP(custIndex);
+			}
+			else {
+				System.out.println("\nCustomer " + custIndex + " has arrived!");
+				c = new Customer(custIndex);
+			}
 			custList[custIndex] = c;
 			custIndex += 1;
 		}
@@ -244,7 +260,7 @@ public class RestaurantGame {
 		}
 	}
 	
-	// Apply waiting penalty, make customer leave is satisfaction is subzero
+	// Apply waiting penalty, make customer leave if satisfaction is subzero
 	public void updateSatisfaction() {
 		
 		// Iterate through every customer

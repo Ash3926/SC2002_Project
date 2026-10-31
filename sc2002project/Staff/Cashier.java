@@ -17,7 +17,7 @@ public class Cashier extends Staff {
 
                 Table table = tableList[cust.getTableID()];
                 Order order = table.getOrder();
-                int bill = order.getItem().getPrice();
+                int bill = order.getItem().getPrice() * (cust.getBilling()/100);
 
                 // Update customer and order
                 cust.changeStatus(CustomerStatus.PAID);

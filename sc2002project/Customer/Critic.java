@@ -8,7 +8,7 @@ public class Critic extends Customer {
 	
 	@Override
 	public int applyWaitingPenalty() {
-		satisfaction -= 12
+		satisfaction -= 12;
 		return satisfaction;
 	}
 }
