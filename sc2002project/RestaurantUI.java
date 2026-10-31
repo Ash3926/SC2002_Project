@@ -10,27 +10,35 @@ public class RestaurantUI {
 		System.out.println("Starting Restaurant Rush game...\nWelcome, Manager!");
 		Scanner sc = new Scanner(System.in);
 		RestaurantGame game = new RestaurantGame();
-		
+
 		// Game runs for 18 turns
 		while (game.getCurrTurn() <= 18) {
+
 			game.startTurnDisplay();
-			game.cashierAction();
-			game.customerEat();
-			
-			// Waiter
-			System.out.print("\nWaiter action: " );
+
+			// Waiter chooses an action
+			System.out.print("\nWaiter action: ");
 			game.waiterChoice(sc, sc.nextLine());
-			
-			// Chef
+
+			// Chef chooses an action
 			System.out.print("\nChef action: ");
 			game.chefChoice(sc, sc.nextLine());
-			
+
+			// Cashier handles payment
+			game.cashierAction();
+
+			// Customers finish eating
+			game.customerEat();
+
+			// Update satisfaction
 			game.updateSatisfaction();
+
+			// Display results and move to next turn
 			game.endTurnDisplay();
 			game.nextTurn();
 		}
-		game.endGameDisplay();
+
+		game.endTurnDisplay();
 		sc.close();
 	}
-	
 }

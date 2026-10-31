@@ -45,7 +45,7 @@ public class RestaurantGame {
 		System.out.println("Current turn: " + currStats.getCurrTurn());
 		System.out.println("Revenue: " + currStats.getTRevenue());
 		int avgSatisfaction = currStats.calcAvgSatisfaction();
-		if (avgSatisfaction == 0) {
+		if (currStats.getPaidCustomers() == 0) {
 			System.out.println("Average satisfaction of paid customers: N/A");
 		}
 		else {
@@ -175,6 +175,7 @@ public class RestaurantGame {
 					if (w.serveOrder(orderList[ordID])) {
 						System.out.println("Order served!");
 						currStats.incrementServedCustomers();
+						orderList[ordID].getCustomer().setServedTurn(currStats.getCurrTurn());
 					} else {
 						System.out.println("Please try again.");
 						System.out.print("\nWaiter action: " );
@@ -228,20 +229,17 @@ public class RestaurantGame {
 	public void cashierAction() {
 		Cashier cash = (Cashier) staffList[0];
 		cash.resetForTurn();
-		while (cash.canAct()) {
-			if (cash.handlePayment(tableList, custList, currStats)) {
-				currStats.incrementPaidCustomers();
-			}
-		}
+		cash.handlePayment(tableList, custList, currStats);
 	}
 	
 	// Customer spend 1 turn eating, become ready to pay
 	public void customerEat() {
-		
-		// Identify all eating customers
-		for (int i=0; i<10; i++) {
-			if (custList[i] != null && custList[i].getStatus() == CustomerStatus.EATING) {
-				custList[i].changeStatus(CustomerStatus.READY_TO_PAY);
+		for (int i = 0; i < custList.length; i++) {
+			Customer cust = custList[i];
+			if (cust != null && cust.getStatus() == CustomerStatus.EATING) {
+				if (cust.getServedTurn() < currStats.getCurrTurn()) {
+					cust.changeStatus(CustomerStatus.READY_TO_PAY);
+				}
 			}
 		}
 	}
@@ -290,7 +288,7 @@ public class RestaurantGame {
 		System.out.println("Total Revenue: " + currStats.getTRevenue());
 		//average satisfaction of paid customers
 		int avgSatisfaction = currStats.calcAvgSatisfaction();
-		if (avgSatisfaction == 0) {
+		if (currStats.getPaidCustomers() == 0) {
 			System.out.println("Average satisfaction of paid customers: N/A");
 		}
 		else {
@@ -298,27 +296,36 @@ public class RestaurantGame {
 		}
 	}
 
+	
 	public void endGameDisplay() {
+
 		System.out.println("\n=================== GAME OVER ====================");
 
-		//win/lose - win criteria: at least 4 paid customers, revenue >= 45, avg satisfaction of paid customers >= 60
-		if (currStats.getPaidCustomers() >= 4 && currStats.getTRevenue() >= 45 && currStats.calcAvgSatisfaction() >= 60) {
-			System.out.println("\n==================================================");
-			System.out.println("\n=================== VICTORY! =====================");
+		// Check victory conditions
+		if (currStats.getPaidCustomers() >= 4 &&
+			currStats.getTRevenue() >= 45 &&
+			currStats.calcAvgSatisfaction() >= 60) {
+
+			System.out.println("VICTORY!");
+
+		} else {
+			System.out.println("DEFEAT.");
 		}
-		else {
-			System.out.println("\n==================== DEFEAT. =====================");
 
-
-		System.out.println("STATISTICS!");
+		// Display final statistics
+		System.out.println("\nSTATISTICS!");
 		System.out.println("Total revenue: " + currStats.getTRevenue());
 		System.out.println("Total customers served: " + currStats.getTServedCustomers());
 		System.out.println("Total unhappy departures: " + currStats.getTUnhappyDepartures());
-		System.out.println("Average satisfaction of paid customers: " + currStats.calcAvgSatisfaction());
 
-		System.out.println("\nThank you playing Papa's Western Fooderia! See you next time!");
+		if (currStats.getPaidCustomers() == 0) {
+			System.out.println("Average satisfaction of paid customers: N/A");
+		} else {
+			System.out.println("Average satisfaction of paid customers: " + currStats.calcAvgSatisfaction());
 		}
 
+		System.out.println("\nThank you for playing Papa's Western Fooderia!");
 	}
+
 		
 }
