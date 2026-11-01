@@ -4,12 +4,14 @@ import SC2002_Project.sc2002project.Objects.*;
 public class Customer {
 	private int customerID;
 	private int tableID;
-	private int satisfaction = 100;
+	protected int satisfaction = 100;
+	protected int billing;
 	private int servedTurn = -1;
 	private CustomerStatus status = CustomerStatus.WAITING;
 	
 	public Customer(int custID) {
 		customerID = custID;
+		billing = 100;
 	}
 	
 	public int getCustomerID() {
@@ -38,6 +40,10 @@ public class Customer {
 
 	public int getServedTurn() {
 		return servedTurn;
+	}
+
+	public int getBilling() {
+		return billing;
 	}
 	
 	public int placeOrder(MenuItem[] menu) {
