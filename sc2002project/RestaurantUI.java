@@ -13,8 +13,8 @@ public class RestaurantUI {
 
 		// Game runs for 18 turns
 		while (game.getCurrTurn() <= 18) {
-
 			game.startTurnDisplay();
+			game.happyHour(sc);
 
 			// Waiter chooses an action
 			System.out.print("\nWaiter action: ");

@@ -35,7 +35,7 @@ public class Customer {
 	}
 
 	public void setServedTurn(int turn) {
-    servedTurn = turn;
+		servedTurn = turn;
 	}
 
 	public int getServedTurn() {
@@ -44,6 +44,10 @@ public class Customer {
 
 	public int getBilling() {
 		return billing;
+	}
+	
+	public void setBilling(double multiplier) {
+		billing = (int) (billing * multiplier);
 	}
 	
 	public int placeOrder(MenuItem[] menu) {
@@ -57,6 +61,13 @@ public class Customer {
 			satisfaction = 0;
 		}
 		return satisfaction;
+	}
+	
+	public void recoverSatisfaction(int recovery) {
+		satisfaction += recovery;
+		if (satisfaction > 100) {
+			satisfaction = 100;
+		}
 	}
 	
 	public void changeStatus(CustomerStatus custStatus) {

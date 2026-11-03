@@ -14,6 +14,7 @@ public class RestaurantGame {
 	private Staff[] staffList;
 	private Order[] orderList;
 	private int custIndex = 0;
+	private int happyHourTurns = 3;
 
 	// Constructor method
 	public RestaurantGame() {
@@ -36,6 +37,9 @@ public class RestaurantGame {
 	
 	public void nextTurn() {
 		currStats.incrementTurn();
+		if (isHappyHour()) {
+			happyHourTurns -= 1;
+		}
 	}
 
 	public void startTurnDisplay() {
@@ -90,6 +94,40 @@ public class RestaurantGame {
 		System.out.println("Waiter: \n1. Seat one queued customer at a free table \n2. Take one seated customer's order\n3. Serve one READY order\n4. Wait");
 		System.out.println("Chef: \n1. Choose one order to advance by 1 preparation unit\n2. Wait");
 
+	}
+	
+	public boolean isHappyHour() {
+		return (happyHourTurns == 1 || happyHourTurns == 2);
+	}
+	
+	public void happyHour(Scanner sc) {
+		if (happyHourTurns == 3) {
+			System.out.print("\nWould you like to activate Happy Hour for 2 turns (once per game)? [Y/N]: ");
+			String choice = sc.nextLine();
+			while (!choice.equals("Y") && !choice.equals("N")) {
+				System.out.print("Please enter either 'Y' or 'N': ");
+				choice = sc.nextLine();
+			}
+			if (choice.equals("Y")) {
+				happyHourTurns -= 1;
+				System.out.println("Happy Hour activated!");
+			}
+		} else if (happyHourTurns == 0) {
+			System.out.println("\nYou can no longer activate Happy Hour.");
+		}
+		if (isHappyHour()) {
+			System.out.println("\nHappy Hour turns left: " + happyHourTurns);
+			
+			for (int i=0; i<10; i++) {
+				Customer cust = custList[i];
+				if (cust != null) {
+					if (cust.getStatus() == CustomerStatus.WAITING || cust.getStatus() == CustomerStatus.SEATED) {
+						cust.recoverSatisfaction(15);
+					}
+				}
+			}
+			System.out.println("Waiting and seated customers recovered 15 satisfaction!");
+		}
 	}
 	
 	// Customer arrival at turn 1, 4, 7, 10, 13, 16
@@ -170,11 +208,16 @@ public class RestaurantGame {
 					System.out.print("Table ID to take order from: ");
 					int tabID_2 = validIntegerRange(sc, sc.nextLine(), 0, 1);
 					// attempt to take order
-					Order order = w.takeOrder(tableList[tabID_2], menu);
+					Table table = tableList[tabID_2];
+					Order order = w.takeOrder(table, menu);
 					if (order != null) {
 						orderList[order.getOrderID()] = order;
 						System.out.println("Order placed!");
 						order.display();
+						if (isHappyHour()) {
+							Customer cust = table.getOccupant();
+							cust.setBilling(0.8);
+						}
 					} else {
 						System.out.println("Please try again.");
 						System.out.print("\nWaiter action: " );
