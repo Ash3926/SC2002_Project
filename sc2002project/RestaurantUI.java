@@ -16,6 +16,10 @@ public class RestaurantUI {
 			game.startTurnDisplay();
 			game.happyHour(sc);
 
+			// Host chooses an action
+			System.out.print("\nHost action: ");
+			game.hostChoice(sc, sc.nextLine());
+
 			// Waiter chooses an action
 			System.out.print("\nWaiter action: ");
 			game.waiterChoice(sc, sc.nextLine());

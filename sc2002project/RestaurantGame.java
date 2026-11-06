@@ -24,11 +24,21 @@ public class RestaurantGame {
 			tableList[i] = new Table(i);
 		}
 		custList =  new Customer[10];
-		staffList = new Staff[] {new Cashier(), new Waiter(), new Chef()}; //arranged in order of task flow
+		staffList = new Staff[] {new Cashier(), new Waiter(), new Chef(), new Host()}; //arranged in order of task flow
 		orderList = new Order[10];
 
 		// Initialize menu
-		menu = new MenuItem[] {new MenuItem("Salad", 9, 1), new MenuItem("Burger", 15, 1), new MenuItem("Pasta", 18, 2)};
+		
+		MenuItem salad = new MenuItem("Salad", 900, 1);
+		MenuItem burger = new MenuItem("Burger", 1500, 1);
+		MenuItem pasta = new MenuItem("Pasta", 1800, 2);
+
+		menu = new MenuItem[] {
+			salad,
+			burger,
+			pasta,
+			new ComboMeal(salad, pasta)
+		};
 	}
 	
 	public int getCurrTurn() {
@@ -47,7 +57,7 @@ public class RestaurantGame {
 		// Display stats
 		System.out.println("\n==================================================");
 		System.out.println("Current turn: " + currStats.getCurrTurn());
-		System.out.println("Revenue: " + currStats.getTRevenue());
+		System.out.printf("Revenue: $%.2f%n", currStats.getTRevenue() / 100.0);
 		int avgSatisfaction = currStats.calcAvgSatisfaction();
 		if (currStats.getPaidCustomers() == 0) {
 			System.out.println("Average satisfaction of paid customers: N/A");
@@ -91,6 +101,7 @@ public class RestaurantGame {
 
 		//staff tasks available 
 		System.out.println("\nStaff tasks available:");
+		System.out.println("Host: \n1. Seat one queued customer\n2. Wait");
 		System.out.println("Waiter: \n1. Seat one queued customer at a free table \n2. Take one seated customer's order\n3. Serve one READY order\n4. Wait");
 		System.out.println("Chef: \n1. Choose one order to advance by 1 preparation unit\n2. Wait");
 
@@ -177,6 +188,39 @@ public class RestaurantGame {
 		
 	}
 
+	
+	// Host can seat one customer per turn, separately from Waiter
+	public void hostChoice(Scanner sc, String input) {
+		Host h = (Host) staffList[3];
+		h.resetForTurn();
+		int choice = validIntegerRange(sc, input, 1, 2);
+
+		while (h.canAct()) {
+			switch (choice) {
+				case 1:
+					System.out.print("Customer ID to seat: ");
+					int custID = validIntegerRange(sc, sc.nextLine(), 0, 9);
+					System.out.print("Table ID to seat at: ");
+					int tableID = validIntegerRange(sc, sc.nextLine(), 0, 1);
+
+					if (h.seatCustomer(custList[custID], tableList[tableID])) {
+						System.out.println("Host seated the customer!");
+					} else {
+						System.out.println("Please try again.");
+						System.out.print("\nHost action: ");
+						choice = validIntegerRange(sc, sc.nextLine(), 1, 2);
+					}
+					break;
+
+				case 2:
+					h.waiting();
+					System.out.println("Host waited this turn.");
+					break;
+			}
+		}
+	}
+
+
 	// Waiter choice this turn
 	public void waiterChoice(Scanner sc, String input) {
 		Waiter w = (Waiter) staffList[1];
@@ -213,11 +257,18 @@ public class RestaurantGame {
 					if (order != null) {
 						orderList[order.getOrderID()] = order;
 						System.out.println("Order placed!");
-						order.display();
+						Customer cust = table.getOccupant();
+						// VIP discount first
+						int finalPrice = (int) Math.round(
+							order.getItem().getPrice() * cust.getBilling() / 100.0
+						);
+						// Happy Hour discount second
 						if (isHappyHour()) {
-							Customer cust = table.getOccupant();
-							cust.setBilling(0.8);
+							finalPrice = (int) Math.round(finalPrice * 0.8);
 						}
+						order.setFinalPrice(finalPrice);
+						order.display();
+
 					} else {
 						System.out.println("Please try again.");
 						System.out.print("\nWaiter action: " );
@@ -344,7 +395,7 @@ public class RestaurantGame {
 		//unhappy departures
 		System.out.println("Number of unhappy departures: " + currStats.getTUnhappyDepartures());
 		//revenue
-		System.out.println("Total Revenue: " + currStats.getTRevenue());
+		System.out.printf("Total Revenue: $%.2f%n", currStats.getTRevenue() / 100.0);
 		//average satisfaction of paid customers
 		int avgSatisfaction = currStats.calcAvgSatisfaction();
 		if (currStats.getPaidCustomers() == 0) {
@@ -362,7 +413,7 @@ public class RestaurantGame {
 
 		// Check victory conditions
 		if (currStats.getPaidCustomers() >= 4 &&
-			currStats.getTRevenue() >= 45 &&
+			currStats.getTRevenue() >= 4500 &&
 			currStats.calcAvgSatisfaction() >= 60) {
 
 			System.out.println("VICTORY!");
@@ -373,7 +424,7 @@ public class RestaurantGame {
 
 		// Display final statistics
 		System.out.println("\nSTATISTICS!");
-		System.out.println("Total revenue: " + currStats.getTRevenue());
+		System.out.printf("Total revenue: $%.2f%n", currStats.getTRevenue() / 100.0);
 		System.out.println("Total customers served: " + currStats.getTServedCustomers());
 		System.out.println("Total unhappy departures: " + currStats.getTUnhappyDepartures());
 

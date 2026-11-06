@@ -9,6 +9,7 @@ public class Order {
 	private MenuItem item;
 	private OrderStatus status = OrderStatus.PLACED;
 	private int preparedUnits = 0;
+	private int finalPrice;
 	
     public Order(int orderID, Table table, MenuItem item) {
         if (table == null || item == null) {
@@ -21,6 +22,7 @@ public class Order {
         this.table = table;
         this.tableID = table.getTableID();
         this.item = item;
+		this.finalPrice = item.getPrice();
     }
 
 	public int getOrderID() {
@@ -37,6 +39,14 @@ public class Order {
 	
 	public MenuItem getItem() {
 		return item;
+	}
+
+	public int getFinalPrice() {
+		return finalPrice;
+	}
+
+	public void setFinalPrice(int price) {
+		finalPrice = price;
 	}
 	
 	public OrderStatus getOrderStatus() {
@@ -79,6 +89,7 @@ public class Order {
 		System.out.print("Order " + orderID + " (");
 		System.out.print("Status: " + status);
 		System.out.print(", Item: " + item.getName());
-		System.out.println(", Units left: " + getRemainingUnits() + ")");
+		System.out.printf(", Units left: %d, Bill: $%.2f)%n",
+                  getRemainingUnits(), finalPrice / 100.0);
 	}
 }

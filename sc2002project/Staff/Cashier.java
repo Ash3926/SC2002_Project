@@ -17,7 +17,7 @@ public class Cashier extends Staff {
 
                 Table table = tableList[cust.getTableID()];
                 Order order = table.getOrder();
-                int bill = (int) (order.getItem().getPrice() * (cust.getBilling()/100.0));
+                int bill = order.getFinalPrice();
 
                 // Update customer and order
                 cust.changeStatus(CustomerStatus.PAID);
@@ -31,7 +31,8 @@ public class Cashier extends Staff {
                 // Free the table
                 table.release();
 				
-                System.out.println("Received $" + bill + " from Customer " + cust.getCustomerID());
+                System.out.printf("Received $%.2f from Customer %d%n",
+                  bill / 100.0, cust.getCustomerID());
                 System.out.println("Table " + table.getTableID() + " is now free!");
 
                 break;
