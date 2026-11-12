@@ -7,8 +7,12 @@ public class Critic extends Customer {
 	}
 	
 	@Override
-	public int applyWaitingPenalty() {
-		satisfaction -= 12;
-		return satisfaction;
+	public void applyWaitingPenalty() {
+		satisfaction -= 12; //can go below 0
+	}
+	
+	@Override
+	public boolean wantsToLeave() {
+		return false;
 	}
 }

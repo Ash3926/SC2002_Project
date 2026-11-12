@@ -354,17 +354,18 @@ public class RestaurantGame {
 		}
 	}
 	
-	// Apply waiting penalty, make customer leave if satisfaction is subzero
+	// Apply waiting penalty, make customer leave if fulfill leaving condition
 	public void updateSatisfaction() {
 		
 		// Iterate through every customer
 		for (int i=0; i<10; i++) {
 			Customer cust = custList[i];
 			if (cust != null) {
+				cust.applyWaitingPenalty();
 				
 				// Waiting in queue
 				if (cust.getStatus() == CustomerStatus.WAITING) {
-					if (cust.applyWaitingPenalty() == 0) {
+					if (cust.wantsToLeave()) {
 						cust.changeStatus(CustomerStatus.LEFT);
 						currStats.incrementUnhappyDepartures();
 						System.out.println("\nCustomer " + cust.getCustomerID() + " has left!");
@@ -372,7 +373,7 @@ public class RestaurantGame {
 					
 				// Seated at table
 				} else if (cust.getStatus() == CustomerStatus.SEATED) {
-					if (cust.applyWaitingPenalty() == 0) {
+					if (cust.wantsToLeave()) {
 						cust.changeStatus(CustomerStatus.LEFT);
 						Table t = tableList[cust.getTableID()];
 						Order o = t.getOrder();

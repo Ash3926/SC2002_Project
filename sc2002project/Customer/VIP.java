@@ -8,12 +8,11 @@ public class VIP extends Customer {
 	}
 	
 	@Override
-	public int applyWaitingPenalty() {
+	public void applyWaitingPenalty() {
 		if (satisfaction > 5) {
 			satisfaction -= 5;
 		} else {
 			satisfaction = 0;
 		}
-		return satisfaction;
 	}
 }
