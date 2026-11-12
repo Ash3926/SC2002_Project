@@ -361,7 +361,10 @@ public class RestaurantGame {
 		for (int i=0; i<10; i++) {
 			Customer cust = custList[i];
 			if (cust != null) {
-				cust.applyWaitingPenalty();
+				if (cust.getStatus() == CustomerStatus.WAITING ||
+					cust.getStatus() == CustomerStatus.SEATED) {
+					cust.applyWaitingPenalty();
+    			}
 				
 				// Waiting in queue
 				if (cust.getStatus() == CustomerStatus.WAITING) {
