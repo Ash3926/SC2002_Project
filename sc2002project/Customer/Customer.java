@@ -54,13 +54,16 @@ public class Customer {
 		return customerID % menu.length;
 	}
 	
-	public int applyWaitingPenalty() {
+	public void applyWaitingPenalty() {
 		if (satisfaction > 8) {
 			satisfaction -= 8;
 		} else {
 			satisfaction = 0;
 		}
-		return satisfaction;
+	}
+	
+	public boolean wantsToLeave() {
+		return satisfaction == 0;
 	}
 	
 	public void recoverSatisfaction(int recovery) {
