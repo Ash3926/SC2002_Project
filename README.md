@@ -50,6 +50,8 @@ Individual AI Use Declarations are included in each person's branch
   * Staff, Waiter, Chef & Cashier classes
 * stage-3
   * Host & ComboMeal implementation
+* documentation
+  * Design Discussion
 ### kat-fly
 * stage-1
   * RestaurantGame & GameStats classes
