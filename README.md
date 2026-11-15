@@ -62,3 +62,16 @@ Individual AI Use Declarations are included in each person's branch
   * stage-3 initial UML Class Diagram
   * QC stage-1 and stage-2 class diagrams
   * Editing Presentation Video
+  
+## Key Demo Video Timestamps
+* `[00:00]` Stage tag comparisons
+* `[00:51]` Beginning of gameplay demo - Victory run
+* `[01:18]` User input validation
+* `[01:57]` Dish goes from READY –> SERVED → payment (turns 2 to 4)
+* `[02:27]` Critic arrival
+* `[03:28]` VIP arrival + Happy Hour
+* `[05:53]` Defeat run
+* `[07:11]` Stage 1 UML class diagram
+* `[09:17]` Stage 2 UML class diagram
+* `[10:19]` Stage 3 UML class diagram
+* `[12:05]` UML sequence diagram
